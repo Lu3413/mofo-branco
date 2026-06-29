@@ -1,5 +1,5 @@
 """
-🌱 App Completo - Detector de Mofo Branco
+page_icon="favicon.png" App Completo - Detector de Mofo Branco
 📸 Câmera + Upload + IA + Manual | Juliatti et al. (2013)
 """
 import streamlit as st
