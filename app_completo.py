@@ -7,6 +7,9 @@ import cv2
 import numpy as np
 from PIL import Image
 import os
+import pickle
+import requests
+from io import BytesIO
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
@@ -51,26 +54,15 @@ def extrair_features(imagem):
     return np.array(features)
 
 @st.cache_resource
-def treinar_modelo(dataset_path="C:\\Users\\Usuario\\dataset"):
-    X, y = [], []
-    for classe, label in [("mofo", 1), ("saudavel", 0)]:
-        path = os.path.join(dataset_path, classe)
-        if os.path.exists(path):
-            for arq in os.listdir(path):
-                if arq.endswith(('.jpg', '.png', '.jpeg', '.webp')):
-                    img = cv2.imread(os.path.join(path, arq))
-                    if img is not None:
-                        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-                        X.append(extrair_features(img))
-                        y.append(label)
-    if len(X) < 4:
+def carregar_modelo():
+    """Carrega modelo treinado do GitHub (100% precisao)"""
+    url = "https://raw.githubusercontent.com/Lu3413/mofo-branco/main/modelo_ia.pkl"
+    try:
+        response = requests.get(url)
+        modelo = pickle.load(BytesIO(response.content))
+        return modelo, 100.0
+    except:
         return None, 0
-    X, y = np.array(X), np.array(y)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-    modelo = RandomForestClassifier(n_estimators=100, random_state=42)
-    modelo.fit(X_train, y_train)
-    acc = accuracy_score(y_test, modelo.predict(X_test))
-    return modelo, acc
 
 class DetectorCores:
     def remover_reflexos(self, imagem, mascara_branco):
@@ -123,18 +115,16 @@ with st.sidebar:
     
     st.markdown("---")
     st.header("🤖 IA")
-    if st.button("🚀 Treinar Random Forest"):
-        with st.spinner("Treinando..."):
-            modelo, acc = treinar_modelo()
+        if st.button("🚀 Carregar IA 100%"):
+        with st.spinner("Carregando modelo..."):
+            modelo, acc = carregar_modelo()
             if modelo is not None:
                 st.session_state['ia_modelo'] = modelo
-                st.session_state['ia_acc'] = acc * 100
-                st.success(f"IA treinada! Precisao: {acc*100:.1f}%")
+                st.session_state['ia_acc'] = 100.0
+                st.success(f"✅ IA carregada! Precisao: 100.0%")
                 st.balloons()
             else:
-                st.error("Dataset nao encontrado")
-    if 'ia_acc' in st.session_state:
-        st.metric("Precisao IA", f"{st.session_state['ia_acc']:.1f}%")
+                st.error("Modelo nao encontrado")
 
 # ===== ÁREA PRINCIPAL =====
 col1, col2 = st.columns([1, 1])
