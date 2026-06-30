@@ -112,16 +112,16 @@ with st.sidebar:
     
     if modo == "📸 Câmera":
         st.info("📷 Use a câmera do celular!")
-       if st.button("🚀 Carregar IA 100%"):
-        with st.spinner("Carregando modelo..."):
-            modelo, acc = carregar_modelo()
-            if modelo is not None:
-                st.session_state['ia_modelo'] = modelo
-                st.session_state['ia_acc'] = 100.0
-                st.success("✅ IA carregada! Precisao: 100.0%")
-                st.balloons()
-            else:
-                st.error("Modelo nao encontrado")
+if st.button("🚀 Carregar IA 100%"):
+    with st.spinner("Carregando modelo..."):
+        modelo, acc = carregar_modelo()
+        if modelo is not None:
+            st.session_state['ia_modelo'] = modelo
+            st.session_state['ia_acc'] = 100.0
+            st.success("✅ IA carregada! Precisao: 100.0%")
+            st.balloons()
+        else:
+            st.error("Modelo nao encontrado")
     if 'ia_acc' in st.session_state:
         st.metric("Precisao IA", f"{st.session_state['ia_acc']:.1f}%")
 
