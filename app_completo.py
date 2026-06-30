@@ -1,5 +1,5 @@
 """
-page_icon="favicon.png" App Completo - Detector de Mofo Branco
+🌱 App Completo - Detector de Mofo Branco
 📸 Câmera + Upload + IA + Manual | Juliatti et al. (2013)
 """
 import streamlit as st
@@ -14,11 +14,26 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
-st.set_page_config(page_title="Severidade de Mofo Branco", page_icon="🌱", layout="wide")
-st.title("🔬 Severidade de Mofo Branco")
+st.set_page_config(page_title="Mofo Branco Completo", page_icon="🌱", layout="wide")
+st.title("🌱 Detector de Mofo Branco - Completo")
 st.markdown("### 📸 Câmera + Upload + IA + Escala Juliatti et al. (2013)")
 st.markdown("---")
+# ===== LOGIN =====
+if 'autenticado' not in st.session_state:
+    st.session_state.autenticado = False
 
+if not st.session_state.autenticado:
+    st.title("🔐 Acesso Restrito")
+    usuario = st.text_input("Usuário")
+    senha = st.text_input("Senha", type="password")
+    
+    if st.button("Entrar"):
+        if usuario == "admin" and senha == "mofo2024":
+            st.session_state.autenticado = True
+            st.rerun()
+        else:
+            st.error("Usuário ou senha incorretos!")
+    st.stop()
 
 class EscalaJuliatti:
     def __init__(self):
@@ -55,7 +70,6 @@ def extrair_features(imagem):
 
 @st.cache_resource
 def carregar_modelo():
-    """Carrega modelo treinado do GitHub (100% precisao)"""
     url = "https://raw.githubusercontent.com/Lu3413/mofo-branco/main/modelo_ia.pkl"
     try:
         response = requests.get(url)
@@ -112,6 +126,9 @@ with st.sidebar:
     
     if modo == "📸 Câmera":
         st.info("📷 Use a câmera do celular!")
+    
+    st.markdown("---")
+    st.header("🤖 IA")
 if st.button("🚀 Carregar IA 100%"):
     with st.spinner("Carregando modelo..."):
         modelo, acc = carregar_modelo()
@@ -122,8 +139,9 @@ if st.button("🚀 Carregar IA 100%"):
             st.balloons()
         else:
             st.error("Modelo nao encontrado")
-    if 'ia_acc' in st.session_state:
-        st.metric("Precisao IA", f"{st.session_state['ia_acc']:.1f}%")
+
+# ===== ÁREA PRINCIPAL =====
+col1, col2 = st.columns([1, 1])
 
 with col1:
     st.header("📤 Entrada")
