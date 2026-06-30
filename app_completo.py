@@ -115,7 +115,7 @@ with st.sidebar:
     
     st.markdown("---")
     st.header("🤖 IA")
-        if st.button("🚀 Carregar IA 100%"):
+            if st.button("🚀 Carregar IA 100%"):
         with st.spinner("Carregando modelo..."):
             modelo, acc = carregar_modelo()
             if modelo is not None:
