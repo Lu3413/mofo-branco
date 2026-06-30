@@ -15,7 +15,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
 st.set_page_config(page_title="Mofo Branco Completo", page_icon="🌱", layout="wide")
-st.title("🌱 Detector de Mofo Branco - Completo")
+st.title("🔬 Severidade de Mofo Branco")
 st.markdown("### 📸 Câmera + Upload + IA + Escala Juliatti et al. (2013)")
 st.markdown("---")
 # ===== LOGIN =====
